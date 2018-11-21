@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Editor!</title>
+
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="node_modules/flat-ui/css/flat-ui.css">
+    <script type="text/javascript"> var looping = false; </script>
+
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <!--script src="https://vjs.zencdn.net/ie8/ie8-version/videojs-ie8.min.js"></script-->
+
+    <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
+    <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="node_modules/vue/dist/vue.min.js"></script>
+    <script src="node_modules/vuex/dist/vuex.min.js"></script>
+
+    <link rel = 'stylesheet' href='app/layout/player.css'/>
+    <script src ='app/lib/player.js' ></script>
+    <script src="node_modules/video.js/dist/video.min.js"></script>
+    <script src="node_modules/videojs-offset/dist/videojs-offset.min.js"></script>
+    <script src="node_modules/flat-ui/js/bootstrap.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-10">hola hola</div>
+        <div class="col-sm-2">hola hola</div>
+      </div>
+    </div>
+
+
+
+
+    <div class="pane pane-list p-3">
+
+          <section id='playerContainer' class='player paused'>
+            <video id='videoContainer' class='video draggable' ></video>
+            <div id='controlContainer' class='controls'>
+                <button id='play' class='play icon-play'></button>
+                <button id='pause' class='hide pause icon-pause'></button>
+                <progress id ='prog' class='progress' ></progress>
+                <div id = 'count' class = 'count'></div>
+                <button id='mute' class='icon-vol mute'></button>
+                <button id='volume' class='icon-vol2 volume'></button>
+                <input type='range'
+                       id='volRange'
+                       class='volRange hidden'
+                       max=1
+                       min=0
+                       step=0.05
+                />
+                <input type="hidden" id="stopTime">
+                <button id='fullscreen' class='icon-fullscreen fullscreen'></button>
+                <button id='smallscreen' class='icon-fullscreen-exit smallscreen'></button>
+            </div>
+            <section id='dropArea' class='dropArea'>
+                <div class='dropZone'>
+                    Arrastra el video
+                    <br/>
+                    Aqui
+                </div>
+                <button id='fileChooser' class='fileChooser'>
+                    Elegir carpeta
+                </button>
+                <input type='text'
+                       id='enterLink'
+                       class='enterLink'
+                       placeholder='URL or path'
+                />
+                <input type='file'
+                       accept="video/*"
+                       id='chooseVideo'
+                       class='chooseVideo hide'
+                />
+            </section>
+            <button id='close' class='close'>X</button>
+            <section id='error' class='error hide hidden'>
+                <h1 id='errorMessage'></h1>
+            </section>
+        </section>
+
+        
+    </div>
+
+    <div class="pane pane-data p-3" id="panel">
+      <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+      <h3>{{data.video}}</h3>
+      <div id="accordion" class="mb-3" role="tablist" aria-multiselectable="true">
+        <div class="card" v-for="edition in data.editions">
+          <div class="card-header" role="tab" id="headingOne">
+            <a data-toggle="collapse" data-parent="#accordion" :href="collapse_id(edition.id, true)" aria-expanded="true" aria-controls="collapseOne">
+              {{edition.name}} <span class="badge badge-secondary" v-on:click="viewEdits(edition.edits)">{{edition.total_editions}}</span>
+            </a>
+          </div>
+
+          <div :id="collapse_id(edition.id)" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="card-block p-3">
+
+              <ul class="list-group">
+                <li class="list-group-item" v-for="edit in edition.edits" v-on:click="viewEdit(edit)">{{edit.start_time}} - {{edit.stop_time}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <textarea v-model="input" placeholder="Copiar aquí la edición" class="form-control"></textarea>
+        <button class="btn btn-success" style="width: 100%;" v-on:click="parseData(input)" >Cargar edicion</button>
+      </div>
+    </div>
+
+    <div class="pane pane-list p-3" style="margin-top: 35%;">
+
+        <!--section>
+          
+          <div class="row buttons">
+              <div class="col-md-3">
+                  <a href="#" class="btn btn-danger">Salida</a> <br> 
+              </div>
+              <div class="col-md-3">
+                  <a href="#" class="btn btn-warning">Transiciones</a> <br> 
+              </div>
+              <div class="col-md-3">
+                  <a href="#" class="btn btn-success">Goles</a> <br> 
+              </div>
+          </div>
+        </section-->
+        
+    </div>
+
+  </body>
+
+  <script>
+    // You can also require other files to run in this process
+
+    require('./renderer.js');
+
+  </script>
+  <script type="text/javascript">
+    function playVideo(){
+      var video = document.querySelector('#videoContainer');
+      video.play();
+      //video.currentTime = 50
+      video.pause();
+      //debugger;
+      src = video.src
+      console.log(src, 'antes', src.includes("#t="))
+      if (src.includes("#t=")) {
+        src = src.replace("#t=", "");
+        console.log(src, 'en el if')
+      }
+      console.log(src, 'durante')
+      video.src = src + "#t=3"
+      video.play();
+      console.log(src, 'despues')
+
+      // var player = videojs('videoContainer');
+
+      // player.offset({
+      //   start: 10,
+      //   end: 300,
+      //   restart_beginning: false //Should the video go to the beginning when it ends
+      // });
+    }
+  </script>
+  <!--script src="https://vjs.zencdn.net/7.3.0/video.js"></script-->
+</html>

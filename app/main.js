@@ -4,31 +4,26 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
-const path = require('path')
-const url = require('url')
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1000, height: 750})
+  mainWindow = new BrowserWindow({
+		  title:'Electron Video Player',
+		  'accept-first-mouse':true,
+		  width: 640,
+		  height: 480,
+		  'min-width': 640,
+		  'min-height': 480,
+		  frame:false,
+		  icon:__dirname+'/img/logo-256.png',
+		  'text-areas-are-resizable':false
+	  });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true,
-    title:'SmartHockey Editor',
-    'accept-first-mouse':true,
-    width: 640,
-    height: 480,
-    'min-width': 640,
-    'min-height': 480,
-    frame:false,
-    'text-areas-are-resizable':false
-  }))
+  mainWindow.loadURL(`file://${__dirname}/player.html`)
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()

@@ -5,10 +5,14 @@
 const pkg = require(__dirname + '/package.json')
 const EventEmitter = require('events');
 const fs = require('fs');
+const https = require('http');
 const path = require('path');
 
 class MyEmitter extends EventEmitter {}
 const emitter = new MyEmitter();
+
+const Persist = require('electron-store');
+const persist = new Persist();
 
 
 
@@ -117,7 +121,7 @@ const app = new Vue({
   `
 
 })
-
+/*
 const appInboxMenu = new Vue({
   el: '#app-inbox-menu',
 
@@ -155,7 +159,7 @@ const appInboxMenu = new Vue({
   `
 
 })
-
+*/
 const appInbox = new Vue({
   el: '#app-inbox',
 
@@ -201,10 +205,10 @@ store.dispatch({
   amount: 10
 })
 
-var appTitle = new Vue({
-  el: '#app-title',
-  data: pkg
-});
+//var appTitle = new Vue({
+  //el: '#app-title',
+  //data: pkg
+//});
 
 
 
@@ -214,7 +218,7 @@ var appTitle = new Vue({
 * * */
 
 $(function(){
-  $('title').text(pkg.productName||pkg.name);
+  $('title').text('SmartHockey Editor');
 });
 
 
@@ -225,19 +229,76 @@ $(function(){
 * * */
 
 emitter.on('document-drop', (data) => {
-  alert('Dropped ' + data.file);
+  //alert('Dropped ' + data.file);
 });
 
 
+/* * *
+  VUE CATEGORIES
+* * */
+
+// Define a new component called button-counter
+Vue.component('categories', {
+  data: function () {
+    return {
+      count: 0,
+      data: JSON.parse('{"editions":[{"name":"CortoOf","edits":[{"start_time":"00:00:02","stop_time":"00:00:02"}]},{"name":"Cortodef","edits":[{"start_time":"00:00:08","stop_time":"00:00:10"}]}]}')
+    }
+  },
+  template: '<button class="btn btn-info" v-on:click="count++">You clicked me {{ count }} times.</button>'
+})
+
+//new Vue({ el: '#components-demo' })
+
+var app_vue = new Vue({
+  el: '#panel',
+  data: {
+    message: 'Hello Vue!',
+    input: '',
+    data: []
+  },
+  mounted:function(){
+    this.getDataPersisted() //method1 will execute at pageload
+  },
+  methods: {
+    collapse_id(thread_ref, is_href) {
+      if (is_href) { return '#collapse_' + thread_ref }
+      return 'collapse_' + thread_ref
+    },
+    viewEdit(edit){
+      var startTimeArray = edit.start_time.split(":");
+      var stopTimeArray = edit.stop_time.split(":");
+      var startTimeInSec = parseInt(startTimeArray[2]) + parseInt(startTimeArray[1]) * 60 + parseInt(startTimeArray[0]) * 3600
+      var stopTimeInSec = parseInt(stopTimeArray[2]) + parseInt(stopTimeArray[1]) * 60 + parseInt(stopTimeArray[0]) * 3600
+      var video = document.querySelector('#videoContainer');
+      var stopTime = document.querySelector('#stopTime');
+      stopTime.value = stopTimeInSec
+      video.currentTime = startTimeInSec
+      video.play();
+    },
+    viewEdits(edits){
+      console.log(edits)
+      for (var i = 0; i < edits.length; i++) {
+        this.viewEdit(edits[i])
+      }
+    },
+    parseData(input){
+      console.log(JSON.parse(input))
+      this.data = JSON.parse(input)
+      this.input = ''
+      persist.set('data', JSON.parse(input));
+    },
+    getDataPersisted(){
+      this.data = persist.get('data')
+    }
+  }
+})
 
 
 /* * *
   INTERNAL API EXAMPLE
 * * */
-
 $(function(){
-
-
   $( "#emitter-example-form" ).submit(function( event ) {
     const eventName = $( "#event-name-select" ).val();
     const color = $( "#example-color-input" ).val();
@@ -245,6 +306,5 @@ $(function(){
     emitter.emit(eventName, {color})
     event.preventDefault();
   });
-
 
 });
