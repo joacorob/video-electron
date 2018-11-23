@@ -28,6 +28,7 @@
     <script src="node_modules/video.js/dist/video.min.js"></script>
     <script src="node_modules/videojs-offset/dist/videojs-offset.min.js"></script>
     <script src="node_modules/flat-ui/js/bootstrap.min.js"></script>
+    <script src="node_modules/chart.js/dist/Chart.js"></script>
 
   </head>
 
@@ -80,7 +81,6 @@
                 <h1 id='errorMessage'></h1>
             </section>
         </section>
-
         
     </div>
 
@@ -99,7 +99,7 @@
             <div class="card-block p-3">
 
               <ul class="list-group">
-                <li class="list-group-item" v-for="edit in edition.edits" v-on:click="viewEdit(edit)">{{edit.start_time}} - {{edit.stop_time}}</li>
+                <li v-for="edit in edition.edits" :class="class_id(edit.id)" v-on:click="viewEdit(edit)">{{edit.start_time}} - {{edit.stop_time}}</li>
               </ul>
             </div>
           </div>
@@ -112,7 +112,16 @@
     </div>
 
     <div class="pane pane-list p-3" style="margin-top: 35%;">
-
+        
+        <div class="row">
+          <div class="col-md-4">
+            <canvas id="myChart" style="width: 200px; height: 200px;"></canvas>
+          </div>
+          <div class="col-md-4">
+            <canvas id="myChartPie" style="width: 200px; height: 200px;"></canvas>
+          </div>
+        </div>
+        
         <!--section>
           
           <div class="row buttons">
@@ -164,6 +173,82 @@
       //   restart_beginning: false //Should the video go to the beginning when it ends
       // });
     }
+  </script>
+  <script>
+  var ctx = document.getElementById("myChart").getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: ["Cortos Of", "Cortos Def", "Salidas", "Bloqueos", "Ingresos of", "Ingresos Def"],
+          datasets: [{
+              label: '# of Votes',
+              data: [12, 19, 3, 5, 2, 3],
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255,99,132,1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          }
+      }
+  });
+  var ctx = document.getElementById("myChartPie").getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ["Cortos Of", "Cortos Def", "Salidas", "Bloqueos", "Ingresos of", "Ingresos Def"],
+          datasets: [{
+              label: '# of Votes',
+              data: [12, 19, 3, 5, 2, 3],
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255,99,132,1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          }
+      }
+  });
   </script>
   <!--script src="https://vjs.zencdn.net/7.3.0/video.js"></script-->
 </html>

@@ -265,6 +265,9 @@ var app_vue = new Vue({
       if (is_href) { return '#collapse_' + thread_ref }
       return 'collapse_' + thread_ref
     },
+    class_id(thread_ref) {
+      return 'list-group-item item-' + thread_ref
+    },
     viewEdit(edit){
       var startTimeArray = edit.start_time.split(":");
       var stopTimeArray = edit.stop_time.split(":");

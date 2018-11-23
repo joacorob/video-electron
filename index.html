@@ -7,89 +7,33 @@
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="node_modules/flat-ui/css/flat-ui.css">
     <script type="text/javascript"> var looping = false; </script>
+    <link href="https://vjs.zencdn.net/7.3.0/video-js.css" rel="stylesheet">
 
     <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
     <!--script src="https://vjs.zencdn.net/ie8/ie8-version/videojs-ie8.min.js"></script-->
 
-    <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
-    <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
 
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
 
-    <script src="node_modules/vue/dist/vue.min.js"></script>
-    <script src="node_modules/vuex/dist/vuex.min.js"></script>
 
-    <link rel = 'stylesheet' href='app/layout/player.css'/>
-    <script src ='app/lib/player.js' ></script>
-    <script src="node_modules/video.js/dist/video.min.js"></script>
-    <script src="node_modules/videojs-offset/dist/videojs-offset.min.js"></script>
-    <script src="node_modules/flat-ui/js/bootstrap.min.js"></script>
 
   </head>
 
   <body>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-10">hola hola</div>
-        <div class="col-sm-2">hola hola</div>
-      </div>
-    </div>
-
-
-
-
     <div class="pane pane-list p-3">
 
-          <section id='playerContainer' class='player paused'>
-            <video id='videoContainer' class='video draggable' ></video>
-            <div id='controlContainer' class='controls'>
-                <button id='play' class='play icon-play'></button>
-                <button id='pause' class='hide pause icon-pause'></button>
-                <progress id ='prog' class='progress' ></progress>
-                <div id = 'count' class = 'count'></div>
-                <button id='mute' class='icon-vol mute'></button>
-                <button id='volume' class='icon-vol2 volume'></button>
-                <input type='range'
-                       id='volRange'
-                       class='volRange hidden'
-                       max=1
-                       min=0
-                       step=0.05
-                />
-                <input type="hidden" id="stopTime">
-                <button id='fullscreen' class='icon-fullscreen fullscreen'></button>
-                <button id='smallscreen' class='icon-fullscreen-exit smallscreen'></button>
-            </div>
-            <section id='dropArea' class='dropArea'>
-                <div class='dropZone'>
-                    Arrastra el video
-                    <br/>
-                    Aqui
-                </div>
-                <button id='fileChooser' class='fileChooser'>
-                    Elegir carpeta
-                </button>
-                <input type='text'
-                       id='enterLink'
-                       class='enterLink'
-                       placeholder='URL or path'
-                />
-                <input type='file'
-                       accept="video/*"
-                       id='chooseVideo'
-                       class='chooseVideo hide'
-                />
-            </section>
-            <button id='close' class='close'>X</button>
-            <section id='error' class='error hide hidden'>
-                <h1 id='errorMessage'></h1>
-            </section>
-        </section>
+       <section>
+        <video class="video-js" preload="auto" data-setup="{}">
+          <source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.mp4" type="video/mp4">
+          <source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.webm" type="video/webm">
+        </video>
+      </section>
+          
 
         
     </div>
@@ -121,27 +65,19 @@
       </div>
     </div>
 
-    <div class="pane pane-list p-3" style="margin-top: 35%;">
 
-        <!--section>
-          
-          <div class="row buttons">
-              <div class="col-md-3">
-                  <a href="#" class="btn btn-danger">Salida</a> <br> 
-              </div>
-              <div class="col-md-3">
-                  <a href="#" class="btn btn-warning">Transiciones</a> <br> 
-              </div>
-              <div class="col-md-3">
-                  <a href="#" class="btn btn-success">Goles</a> <br> 
-              </div>
-          </div>
-        </section-->
+     
         
-    </div>
 
   </body>
 
+  <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
+  <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <script src="node_modules/vuex/dist/vuex.min.js"></script>
+  <script src="node_modules/flat-ui/js/bootstrap.min.js"></script>
+  <script src="https://vjs.zencdn.net/7.3.0/video.js"></script>
   <script>
     // You can also require other files to run in this process
 
@@ -175,5 +111,4 @@
       // });
     }
   </script>
-  <!--script src="https://vjs.zencdn.net/7.3.0/video.js"></script-->
 </html>
