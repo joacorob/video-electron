@@ -129,10 +129,13 @@ function showProgress(){
     getTime(video.duration*1000);
 
     var stopTime = document.querySelector('#stopTime');
-    console.log(looping, 'as')
     if (stopTime.value > 0 && stopTime.value == parseInt(video.currentTime)) { 
         looping = false
         stopTime.value = 0;
+        var actives = document.getElementsByClassName('list-group-item active');
+        for (var i = actives.length - 1; i >= 0; i--) {
+            actives[i].className = "list-group-item";
+        }
         video.pause()
     }
 }

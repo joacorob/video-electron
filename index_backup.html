@@ -91,7 +91,7 @@
         <div class="card" v-for="edition in data.editions">
           <div class="card-header" role="tab" id="headingOne">
             <a data-toggle="collapse" data-parent="#accordion" :href="collapse_id(edition.id, true)" aria-expanded="true" aria-controls="collapseOne">
-              {{edition.name}} <span class="badge badge-secondary" v-on:click="viewEdits(edition.edits)">{{edition.total_editions}}</span>
+              {{edition.name}} ({{edition.key}}) <span class="badge badge-secondary" v-on:click="viewEdits(edition.edits, edition.id)">{{edition.total_editions}}</span><span class="badge badge-primary pull-right" v-on:click="saveEdit(edition.id)">+</span>
             </a>
           </div>
 
@@ -99,7 +99,7 @@
             <div class="card-block p-3">
 
               <ul class="list-group">
-                <li v-for="edit in edition.edits" :class="class_id(edit.id)" v-on:click="viewEdit(edit)">{{edit.start_time}} - {{edit.stop_time}}</li>
+                <li  v-for="edit in edition.edits" :id="edit_id(edit.id)" class="list-group-item" v-on:click="viewEdit(edit, edition.id)" v-on:keyup.left="goBack()">{{edit.start_time}} - {{edit.stop_time}}</li>
               </ul>
             </div>
           </div>
@@ -181,7 +181,6 @@
       data: {
           labels: ["Cortos Of", "Cortos Def", "Salidas", "Bloqueos", "Ingresos of", "Ingresos Def"],
           datasets: [{
-              label: '# of Votes',
               data: [12, 19, 3, 5, 2, 3],
               backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
@@ -218,7 +217,6 @@
       data: {
           labels: ["Cortos Of", "Cortos Def", "Salidas", "Bloqueos", "Ingresos of", "Ingresos Def"],
           datasets: [{
-              label: '# of Votes',
               data: [12, 19, 3, 5, 2, 3],
               backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
@@ -238,15 +236,6 @@
               ],
               borderWidth: 1
           }]
-      },
-      options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
-          }
       }
   });
   </script>

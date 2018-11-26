@@ -1,8 +1,8 @@
 {
-  "name": "bootstrap-electron",
-  "productName": "Bootstrap Electron",
+  "name": "smarthockey-editor",
+  "productName": "SmartHockey Editor",
   "version": "1.0.10",
-  "description": "Electron+bootstrap+vue application framework",
+  "description": "SmartHockey VideoEditor",
   "main": "main.js",
   "scripts": {
     "start": "electron ."

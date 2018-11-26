@@ -255,20 +255,32 @@ var app_vue = new Vue({
   data: {
     message: 'Hello Vue!',
     input: '',
-    data: []
+    data: [],
+    current_category: '',
+    current_edition: ''
   },
   mounted:function(){
     this.getDataPersisted() //method1 will execute at pageload
+  },
+  created: function () {
+    window.addEventListener('keyup', this.moveEdits)
   },
   methods: {
     collapse_id(thread_ref, is_href) {
       if (is_href) { return '#collapse_' + thread_ref }
       return 'collapse_' + thread_ref
     },
-    class_id(thread_ref) {
-      return 'list-group-item item-' + thread_ref
+    edit_id(thread_ref) {
+      return 'edit-' + thread_ref
     },
-    viewEdit(edit){
+    viewEdit(edit, category_id){
+      var actives = document.getElementsByClassName('list-group-item active');
+      for (var i = actives.length - 1; i >= 0; i--) {
+        actives[i].className = "list-group-item";
+      }
+      this.findNext(category_id, edit.id);
+      var currentEdit = document.querySelector('#edit-'+edit.id);
+      currentEdit.className += " active";
       var startTimeArray = edit.start_time.split(":");
       var stopTimeArray = edit.stop_time.split(":");
       var startTimeInSec = parseInt(startTimeArray[2]) + parseInt(startTimeArray[1]) * 60 + parseInt(startTimeArray[0]) * 3600
@@ -280,19 +292,32 @@ var app_vue = new Vue({
       video.play();
     },
     viewEdits(edits){
-      console.log(edits)
       for (var i = 0; i < edits.length; i++) {
-        this.viewEdit(edits[i])
+        this.viewEdit(edits[i], edits.id)
       }
     },
     parseData(input){
-      console.log(JSON.parse(input))
       this.data = JSON.parse(input)
       this.input = ''
       persist.set('data', JSON.parse(input));
     },
     getDataPersisted(){
       this.data = persist.get('data')
+    },
+    findNext(category_id, edition_id){
+      this.current_category = this.data.editions.find(item => item.id === category_id); //array con categorias seleccionada
+      this.current_edition = this.current_category.edits.findIndex(item => item.id === edition_id); //busco index
+    },
+    moveEdits(event){
+      if (event.which == 39) {
+        this.viewEdit(this.current_category.edits[(this.current_edition + 1) % this.current_category.edits.length], this.current_category.id)
+      }else if (event.which == 37){
+        this.viewEdit(this.current_category.edits[(this.current_edition - 1) % this.current_category.edits.length], this.current_category.id)
+      }
+    },
+    saveEdit(category_id){
+      var video = document.querySelector('#videoContainer');
+      console.log(video.currentTime)
     }
   }
 })
