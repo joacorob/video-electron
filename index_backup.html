@@ -12,23 +12,12 @@
     <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
     <!--script src="https://vjs.zencdn.net/ie8/ie8-version/videojs-ie8.min.js"></script-->
 
-    <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
-    <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
 
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
-
-    <script src="node_modules/vue/dist/vue.min.js"></script>
-    <script src="node_modules/vuex/dist/vuex.min.js"></script>
-
     <link rel = 'stylesheet' href='app/layout/player.css'/>
-    <script src ='app/lib/player.js' ></script>
-    <script src="node_modules/video.js/dist/video.min.js"></script>
-    <script src="node_modules/videojs-offset/dist/videojs-offset.min.js"></script>
-    <script src="node_modules/flat-ui/js/bootstrap.min.js"></script>
-    <script src="node_modules/chart.js/dist/Chart.js"></script>
+    
 
   </head>
 
@@ -76,7 +65,6 @@
                        class='chooseVideo hide'
                 />
             </section>
-            <button id='close' class='close'>X</button>
             <section id='error' class='error hide hidden'>
                 <h1 id='errorMessage'></h1>
             </section>
@@ -91,15 +79,16 @@
         <div class="card" v-for="edition in data.editions">
           <div class="card-header" role="tab" id="headingOne">
             <a data-toggle="collapse" data-parent="#accordion" :href="collapse_id(edition.id, true)" aria-expanded="true" aria-controls="collapseOne">
-              {{edition.name}} ({{edition.key}}) <span class="badge badge-secondary" v-on:click="viewEdits(edition.edits, edition.id)">{{edition.total_editions}}</span><span class="badge badge-primary pull-right" v-on:click="saveEdit(edition.id)">+</span>
+              {{edition.name}} ({{edition.key}}) <span class="badge badge-secondary" v-on:click="viewEdits(edition.edits, edition.id)">{{edition.total_editions}}</span>
             </a>
+            <span class="badge badge-primary pull-right" v-on:click="saveEdit(edition.id)">+</span>
           </div>
 
           <div :id="collapse_id(edition.id)" class="collapse" role="tabpanel" aria-labelledby="headingOne">
             <div class="card-block p-3">
 
               <ul class="list-group">
-                <li  v-for="edit in edition.edits" :id="edit_id(edit.id)" class="list-group-item" v-on:click="viewEdit(edit, edition.id)" v-on:keyup.left="goBack()">{{edit.start_time}} - {{edit.stop_time}}</li>
+                <li  v-for="edit in edition.edits" :id="edit_id(edit.id)" class="list-group-item" > <a v-on:click="viewEdit(edit, edition.id)" v-on:keyup.left="goBack()">{{edit.start_time}} - {{edit.stop_time}}</a>  <span class="badge badge-primary pull-right" v-on:click="deleteEdit(edition.id, edit.id)">-</span></li>
               </ul>
             </div>
           </div>
@@ -136,11 +125,27 @@
               </div>
           </div>
         </section-->
+
+
         
     </div>
 
+    
+
   </body>
 
+  <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
+  <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <script src="node_modules/vuex/dist/vuex.min.js"></script>
+
+  <script src ='app/lib/player.js' ></script>
+  <script src="node_modules/video.js/dist/video.min.js"></script>
+  <script src="node_modules/videojs-offset/dist/videojs-offset.min.js"></script>
+  <script src="node_modules/flat-ui/js/bootstrap.min.js"></script>
+  <script src="node_modules/chart.js/dist/Chart.js"></script>
   <script>
     // You can also require other files to run in this process
 

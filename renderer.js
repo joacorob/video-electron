@@ -257,7 +257,8 @@ var app_vue = new Vue({
     input: '',
     data: [],
     current_category: '',
-    current_edition: ''
+    current_edition: '',
+    categories: JSON.parse('{"1":{"id":1,"name":"Salida","post_time":12,"previous_time":2,"hot_key":"a","type":"defense","color":null,"created_at":null,"updated_at":null},"2":{"id":2,"name":"Bloqueo","post_time":10,"previous_time":1,"hot_key":"d","type":"attack","color":null,"created_at":null,"updated_at":null},"3":{"id":3,"name":"Corto Of","post_time":10,"previous_time":3,"hot_key":"w","type":"attack","color":null,"created_at":null,"updated_at":null},"4":{"id":4,"name":"Corto Def","post_time":10,"previous_time":3,"hot_key":"x","type":"defense","color":null,"created_at":null,"updated_at":null},"5":{"id":5,"name":"Transicion Ataque","post_time":6,"previous_time":2,"hot_key":null,"type":"middle","color":null,"created_at":null,"updated_at":null},"6":{"id":6,"name":"Recuperaciones","post_time":4,"previous_time":4,"hot_key":null,"type":"middle","color":null,"created_at":null,"updated_at":null},"7":{"id":7,"name":"Gol a Favor","post_time":2,"previous_time":12,"hot_key":"k","type":"attack","color":null,"created_at":null,"updated_at":null},"8":{"id":8,"name":"Gol en Contra","post_time":2,"previous_time":12,"hot_key":"j","type":"defense","color":null,"created_at":null,"updated_at":null},"9":{"id":9,"name":"Largo a Favor","post_time":1,"previous_time":6,"hot_key":null,"type":"attack","color":null,"created_at":null,"updated_at":null},"10":{"id":10,"name":"Largo en Contra","post_time":1,"previous_time":6,"hot_key":null,"type":"defense","color":null,"created_at":null,"updated_at":null},"11":{"id":11,"name":"Ingreso al area a favor","post_time":2,"previous_time":7,"hot_key":null,"type":"attack","color":null,"created_at":null,"updated_at":null},"12":{"id":12,"name":"Ingreso al area en contra","post_time":2,"previous_time":7,"hot_key":null,"type":"defense","color":null,"created_at":null,"updated_at":null}}')
   },
   mounted:function(){
     this.getDataPersisted() //method1 will execute at pageload
@@ -274,6 +275,7 @@ var app_vue = new Vue({
       return 'edit-' + thread_ref
     },
     viewEdit(edit, category_id){
+      console.log(edit, category_id)
       var actives = document.getElementsByClassName('list-group-item active');
       for (var i = actives.length - 1; i >= 0; i--) {
         actives[i].className = "list-group-item";
@@ -303,6 +305,7 @@ var app_vue = new Vue({
     },
     getDataPersisted(){
       this.data = persist.get('data')
+      console.log(this.data)
     },
     findNext(category_id, edition_id){
       this.current_category = this.data.editions.find(item => item.id === category_id); //array con categorias seleccionada
@@ -317,7 +320,46 @@ var app_vue = new Vue({
     },
     saveEdit(category_id){
       var video = document.querySelector('#videoContainer');
-      console.log(video.currentTime)
+      var current_time = parseInt(video.currentTime);
+      var previous_time = parseInt(video.currentTime) - parseInt(this.categories[category_id].previous_time);
+      if (previous_time < 0) {
+        previous_time = 0;
+      }
+      var post_time = parseInt(video.currentTime) + parseInt(this.categories[category_id].post_time);
+      category_array = this.data.editions.find(item => item.id === category_id); //array con categorias seleccionada
+      current_edition = {id: category_array.edits.length, start_time: this.timeToFormattedTime(previous_time*1000), stop_time: this.timeToFormattedTime(post_time*1000)}
+      category_array.edits.push(current_edition);
+      category_array.total_editions++
+      console.log(category_array)//
+    },
+    timeToFormattedTime(ms){
+      var date = new Date(ms);
+      var time = [];
+
+      if (date.getUTCHours() < 10) {
+        time.push('0'+date.getUTCHours());
+      }else{
+        time.push(date.getUTCHours());
+      }
+      if (date.getUTCMinutes() < 10) {
+        time.push('0'+date.getUTCMinutes());
+      }else{
+        time.push(date.getUTCMinutes());
+      }
+      if (date.getUTCSeconds() < 10) {
+        time.push('0'+date.getUTCSeconds());
+      }else{
+        time.push(date.getUTCSeconds());
+      }
+
+      return time.join(':');
+    },
+    deleteEdit(category_id, edit_id){
+      category_array = this.data.editions.find(item => item.id === category_id); //array con categorias seleccionada
+      current_edition = category_array.edits.findIndex(item => item.id === edit_id); //busco index
+      //remove this
+      category_array.edits.splice(current_edition, 1);
+      category_array.total_editions--
     }
   }
 })

@@ -107,9 +107,21 @@ function getTime(ms){
     var date = new Date(ms);
     var time = [];
 
-    time.push(date.getUTCHours());
-    time.push(date.getUTCMinutes());
-    time.push(date.getUTCSeconds());
+    if (date.getUTCHours() < 10) {
+        time.push('0'+date.getUTCHours());
+    }else{
+        time.push(date.getUTCHours());
+    }
+    if (date.getUTCMinutes() < 10) {
+        time.push('0'+date.getUTCMinutes());
+    }else{
+        time.push(date.getUTCMinutes());
+    }
+    if (date.getUTCSeconds() < 10) {
+        time.push('0'+date.getUTCSeconds());
+    }else{
+        time.push(date.getUTCSeconds());
+    }
 
     return time.join(':');
 }
