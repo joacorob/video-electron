@@ -79,7 +79,7 @@
         <div class="card" v-for="edition in data.editions">
           <div class="card-header" role="tab" id="headingOne">
             <a data-toggle="collapse" data-parent="#accordion" :href="collapse_id(edition.id, true)" aria-expanded="true" aria-controls="collapseOne">
-              {{edition.name}} ({{edition.key}}) <span class="badge badge-secondary" v-on:click="viewEdits(edition.edits, edition.id)">{{edition.total_editions}}</span>
+              {{edition.name}} <span class="badge badge-secondary" v-on:click="viewEdits(edition.edits, edition.id)">{{edition.total_editions}}</span>
             </a>
             <span class="badge badge-primary pull-right" v-on:click="saveEdit(edition.id)">+</span>
           </div>
@@ -97,9 +97,6 @@
       <div class="form-group">
         <textarea v-model="input" placeholder="Copiar aquí la edición" class="form-control"></textarea>
         <button class="btn btn-success" style="width: 100%;" v-on:click="parseData(input)" >Cargar edicion</button>
-        <button class="btn btn-primary" style="width: 100%;" data-toggle="modal" data-target="#exampleModal">
-  Launch demo modal
-</button>
       </div>
     </div>
 
