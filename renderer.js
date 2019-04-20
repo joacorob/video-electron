@@ -305,7 +305,7 @@ var app_vue = new Vue({
     },
     getDataPersisted(){
       this.data = persist.get('data')
-      console.log(this.data)
+      console.log(this.data, this.categories)
     },
     findNext(category_id, edition_id){
       this.current_category = this.data.editions.find(item => item.id === category_id); //array con categorias seleccionada

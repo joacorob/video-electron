@@ -1,46 +1,74 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>Editor!</title>
 
-    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
-    <script type="text/javascript"> var looping = false; </script>
+    <script type="text/javascript">
+        var looping = false;
+    </script>
 
     <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
     <!--script src="https://vjs.zencdn.net/ie8/ie8-version/videojs-ie8.min.js"></script-->
 
-
-
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel = 'stylesheet' href='app/layout/player.css'/>
+    <link rel='stylesheet' href='app/layout/player.css' />
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">SmartHockey</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Categorias <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Videos</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link disabled dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Configuraciones
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
     
+    <div class="pane pane-list p-3" style="margin-top: 35px;">
 
-  </head>
-
-  <body>
-
-    <div class="pane pane-list p-3">
-
-          <section id='playerContainer' class='player paused'>
-            <video id='videoContainer' class='video draggable' ></video>
+        <section id='playerContainer' class='player paused'>
+            <video id='videoContainer' class='video draggable'></video>
             <div id='controlContainer' class='controls'>
                 <button id='play' class='play icon-play'></button>
                 <button id='pause' class='hide pause icon-pause'></button>
-                <progress id ='prog' class='progress' ></progress>
-                <div id = 'count' class = 'count'></div>
+                <progress id='prog' class='progress'></progress>
+                <div id='count' class='count'></div>
                 <button id='mute' class='icon-vol mute'></button>
                 <button id='volume' class='icon-vol2 volume'></button>
-                <input type='range'
-                       id='volRange'
-                       class='volRange hidden'
-                       max=1
-                       min=0
-                       step=0.05
-                />
+                <input type='range' id='volRange' class='volRange hidden' max=1 min=0 step=0.05 />
                 <input type="hidden" id="stopTime">
                 <button id='fullscreen' class='icon-fullscreen fullscreen'></button>
                 <button id='smallscreen' class='icon-fullscreen-exit smallscreen'></button>
@@ -48,71 +76,62 @@
             <section id='dropArea' class='dropArea'>
                 <div class='dropZone'>
                     Arrastra el video
-                    <br/>
-                    Aqui
+                    <br/> Aqui
                 </div>
                 <button id='fileChooser' class='fileChooser'>
                     Elegir carpeta
                 </button>
-                <input type='text'
-                       id='enterLink'
-                       class='enterLink'
-                       placeholder='URL or path'
-                />
-                <input type='file'
-                       accept="video/*"
-                       id='chooseVideo'
-                       class='chooseVideo hide'
-                />
+                <input type='text' id='enterLink' class='enterLink' placeholder='URL or path' />
+                <input type='file' accept="video/*" id='chooseVideo' class='chooseVideo hide' />
             </section>
             <section id='error' class='error hide hidden'>
                 <h1 id='errorMessage'></h1>
             </section>
         </section>
-        
+
     </div>
 
     <div class="pane pane-data p-3" id="panel">
-      <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-      <h3>{{data.video}}</h3>
-      <div id="accordion" class="mb-3" role="tablist" aria-multiselectable="true">
-        <div class="card" v-for="edition in data.editions">
-          <div class="card-header" role="tab" id="headingOne">
-            <a data-toggle="collapse" data-parent="#accordion" :href="collapse_id(edition.id, true)" aria-expanded="true" aria-controls="collapseOne">
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+        <h3>{{data.video}}</h3>
+        <div id="accordion" class="mb-3" role="tablist" aria-multiselectable="true">
+            <div class="card" v-for="edition in data.editions">
+                <div class="card-header" role="tab" id="headingOne">
+                    <a data-toggle="collapse" data-parent="#accordion" :href="collapse_id(edition.id, true)" aria-expanded="true" aria-controls="collapseOne">
               {{edition.name}} <span class="badge badge-secondary" v-on:click="viewEdits(edition.edits, edition.id)">{{edition.total_editions}}</span>
             </a>
-            <span class="badge badge-primary pull-right" v-on:click="saveEdit(edition.id)">+</span>
-          </div>
+                    <span class="badge badge-primary pull-right" v-on:click="saveEdit(edition.id)">+</span>
+                </div>
 
-          <div :id="collapse_id(edition.id)" class="collapse" role="tabpanel" aria-labelledby="headingOne">
-            <div class="card-block p-3">
+                <div :id="collapse_id(edition.id)" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="card-block p-3">
 
-              <ul class="list-group">
-                <li  v-for="edit in edition.edits" :id="edit_id(edit.id)" class="list-group-item" > <a v-on:click="viewEdit(edit, edition.id)" v-on:keyup.left="goBack()">{{edit.start_time}} - {{edit.stop_time}}</a>  <span class="badge badge-primary pull-right" v-on:click="deleteEdit(edition.id, edit.id)">-</span></li>
-              </ul>
+                        <ul class="list-group">
+                            <li v-for="edit in edition.edits" :id="edit_id(edit.id)" class="list-group-item"> <a v-on:click="viewEdit(edit, edition.id)" v-on:keyup.left="goBack()">{{edit.start_time}} - {{edit.stop_time}}</a> <span class="badge badge-primary pull-right" v-on:click="deleteEdit(edition.id, edit.id)">-</span></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <textarea v-model="input" placeholder="Copiar aquí la edición" class="form-control"></textarea>
-        <button class="btn btn-success" style="width: 100%;" v-on:click="parseData(input)" >Cargar edicion</button>
-      </div>
+        <div class="form-group">
+            <textarea v-model="input" placeholder="Copiar aquí la edición" class="form-control"></textarea>
+            <button class="btn btn-success" style="width: 100%;" v-on:click="parseData(input)">Cargar edicion</button>
+        </div>
     </div>
 
     <div class="pane pane-list p-3" style="margin-top: 35%;">
-        
+
         <div class="row">
-          <div class="col-md-4">
-            <canvas id="myChart" style="width: 200px; height: 200px;"></canvas>
-          </div>
-          <div class="col-md-4">
-            <canvas id="myChartPie" style="width: 200px; height: 200px;"></canvas>
-          </div>
+            <div class="col-md-4">
+                <canvas id="myChart" style="width: 200px; height: 200px;"></canvas>
+            </div>
+            <div class="col-md-4">
+                <canvas id="myChartPie" style="width: 200px; height: 200px;"></canvas>
+            </div>
         </div>
-        
+
         <!--section>
-          
+
           <div class="row buttons">
               <div class="col-md-3">
                   <a href="#" class="btn btn-danger">Salida</a> <br> 
@@ -126,142 +145,140 @@
           </div>
         </section-->
 
-
-        
     </div>
 
     <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" style="width: 100%;" data-dismiss="modal">Close</button>
-        <button class="btn btn-primary" style="width: 100%;">Save changes</button>
-      </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" style="width: 100%;" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" style="width: 100%;">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-  </body>
+</body>
 
-  <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
-  <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+<script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
+<script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
 
-  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="node_modules/vue/dist/vue.min.js"></script>
-  <script src="node_modules/vuex/dist/vuex.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/vue/dist/vue.min.js"></script>
+<script src="node_modules/vuex/dist/vuex.min.js"></script>
 
-  <script src ='app/lib/player.js' ></script>
-  <script src="node_modules/video.js/dist/video.min.js"></script>
-  <script src="node_modules/videojs-offset/dist/videojs-offset.min.js"></script>
-  <script src="node_modules/flat-ui/js/bootstrap.min.js"></script>
-  <script src="node_modules/chart.js/dist/Chart.js"></script>
-  <script>
+<script src='app/lib/player.js'></script>
+<script src="node_modules/video.js/dist/video.min.js"></script>
+<script src="node_modules/videojs-offset/dist/videojs-offset.min.js"></script>
+<script src="node_modules/flat-ui/js/bootstrap.min.js"></script>
+<script src="node_modules/chart.js/dist/Chart.js"></script>
+<script>
     // You can also require other files to run in this process
 
     require('./renderer.js');
+</script>
+<script type="text/javascript">
+    function playVideo() {
+        var video = document.querySelector('#videoContainer');
+        video.play();
+        //video.currentTime = 50
+        video.pause();
+        //debugger;
+        src = video.src
+        console.log(src, 'antes', src.includes("#t="))
+        if (src.includes("#t=")) {
+            src = src.replace("#t=", "");
+            console.log(src, 'en el if')
+        }
+        console.log(src, 'durante')
+        video.src = src + "#t=3"
+        video.play();
+        console.log(src, 'despues')
 
-  </script>
-  <script type="text/javascript">
-    function playVideo(){
-      var video = document.querySelector('#videoContainer');
-      video.play();
-      //video.currentTime = 50
-      video.pause();
-      //debugger;
-      src = video.src
-      console.log(src, 'antes', src.includes("#t="))
-      if (src.includes("#t=")) {
-        src = src.replace("#t=", "");
-        console.log(src, 'en el if')
-      }
-      console.log(src, 'durante')
-      video.src = src + "#t=3"
-      video.play();
-      console.log(src, 'despues')
+        // var player = videojs('videoContainer');
 
-      // var player = videojs('videoContainer');
-
-      // player.offset({
-      //   start: 10,
-      //   end: 300,
-      //   restart_beginning: false //Should the video go to the beginning when it ends
-      // });
+        // player.offset({
+        //   start: 10,
+        //   end: 300,
+        //   restart_beginning: false //Should the video go to the beginning when it ends
+        // });
     }
-  </script>
-  <script>
-  var ctx = document.getElementById("myChart").getContext('2d');
-  var myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-          labels: ["Cortos Of", "Cortos Def", "Salidas", "Bloqueos", "Ingresos of", "Ingresos Def"],
-          datasets: [{
-              data: [12, 19, 3, 5, 2, 3],
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255,99,132,1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1
-          }]
-      },
-      options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
-          }
-      }
-  });
-  var ctx = document.getElementById("myChartPie").getContext('2d');
-  var myChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-          labels: ["Cortos Of", "Cortos Def", "Salidas", "Bloqueos", "Ingresos of", "Ingresos Def"],
-          datasets: [{
-              data: [12, 19, 3, 5, 2, 3],
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255,99,132,1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1
-          }]
-      }
-  });
-  </script>
-  <!--script src="https://vjs.zencdn.net/7.3.0/video.js"></script-->
+</script>
+<script>
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Cortos Of", "Cortos Def", "Salidas", "Bloqueos", "Ingresos of", "Ingresos Def"],
+            datasets: [{
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    var ctx = document.getElementById("myChartPie").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ["Cortos Of", "Cortos Def", "Salidas", "Bloqueos", "Ingresos of", "Ingresos Def"],
+            datasets: [{
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+</script>
+<!--script src="https://vjs.zencdn.net/7.3.0/video.js"></script-->
+
 </html>
