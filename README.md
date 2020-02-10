@@ -1,21 +1,14 @@
-# Bootstrap Electron
+# Video editor -> Electron
 
-Boilerplate that combines the Bootstrap GUI and Electron Application.
+![alt text](demo.png)
 
-![](screenshot-big.png)
-![](screenshot.png)
+## Install
 
-## Usage
+Run ```npm install```
 
-Clone or copy https://github.com/fantasyui-com/bootstrap-electron
-make changes as needed and publish to npm registry under your own name.
-
-Execute with ```epx name-of-your-application```
-
-## Using this project
+## Run
 
 ```
-  npm i -g epx;
-  epx bootstrap-electron
+  electron .
 
 ```
